@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from news.models import Publication, PublicationComment, Hashtag, Category
+from news.models import Publication, PublicationComment, Hashtag, Category, SocialNetwork, Address, ContactUs
 
 
 @admin.register(Publication)
@@ -21,6 +21,27 @@ class HashtagAdmin(admin.ModelAdmin):
 @admin.register(PublicationComment)
 class PublicationCommentAdmin(admin.ModelAdmin):
     list_display = ['publication']
+
+    def has_add_permission(self, request,  obj=None):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+
+@admin.register(SocialNetwork)
+class SocialNetworkAdmin(admin.ModelAdmin):
+    list_display = ['instagram', 'facebook', 'twitter', 'youtube']
+
+
+@admin.register(Address)
+class AddressAdmin(admin.ModelAdmin):
+    list_display = ['address', 'phone', 'email', 'last_text']
+
+
+@admin.register(ContactUs)
+class ContactUsAdmin(admin.ModelAdmin):
+    list_display = ['name', 'subject']
 
     def has_add_permission(self, request,  obj=None):
         return False
