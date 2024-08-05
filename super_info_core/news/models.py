@@ -16,17 +16,23 @@ class Hashtag(models.Model):
         return self.title
 
 
-class PublicationComment(models.Model):
-    name = models.CharField(max_length=255)
-    text = models.TextField()
-
-
 class Publication(models.Model):
     is_new = models.BooleanField(default=True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True, related_name='publications')
     title = models.CharField(max_length=100)
     short_description = models.TextField(max_length=300)
     description = RichTextField()
     image = models.ImageField(null=True)
     created_at = models.DateField(auto_now_add=True)
     hashtags = models.ManyToManyField(Hashtag, null=True, related_name='publications')
+
+    def __str__(self):
+        return self.title
+
+
+class PublicationComment(models.Model):
+    name = models.CharField(max_length=255)
+    text = models.TextField()
+    created_at = models.DateField(auto_now_add=True, null=True)
+    publication = models.ForeignKey(Publication, on_delete=models.CASCADE, null=True, related_name='comments')
+

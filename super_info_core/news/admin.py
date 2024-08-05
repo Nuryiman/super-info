@@ -16,3 +16,14 @@ class CategoryAdmin(admin.ModelAdmin):
 @admin.register(Hashtag)
 class HashtagAdmin(admin.ModelAdmin):
     list_display = ['title']
+
+
+@admin.register(PublicationComment)
+class PublicationCommentAdmin(admin.ModelAdmin):
+    list_display = ['publication']
+
+    def has_add_permission(self, request,  obj=None):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False

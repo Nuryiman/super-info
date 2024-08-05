@@ -24,7 +24,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('home/', HomeView.as_view(), name='home_url'),
     path('contact/', ContactView.as_view(), name='contact_url'),
-    path('publication_detail/<int:pk>', PublicationDetailView.as_view(), name='publication_url')
+    path('publication_detail/<int:pk>/', PublicationDetailView.as_view(), name='publication_url'),
+    path('publication_detail/<int:pk>/comment/', PublicationDetailView.as_view(), name='comment_url')
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
