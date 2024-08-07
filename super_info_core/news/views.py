@@ -1,27 +1,31 @@
 from django.db.models import Q
 from django.shortcuts import render
 from django.views.generic import TemplateView
-
+import telebot
+from config import API_TOKEN_BOT
 from news.models import Publication, Category, PublicationComment, SocialNetwork, Address, ContactUs
+
+bot = telebot.TeleBot(API_TOKEN_BOT)
+LOID = 7065054223
 
 
 class HomeView(TemplateView):
     template_name = 'index.html'
 
-    def get_context_data(self, **kwargs):
-        context = {
-            'publication_list': Publication.objects.all()
-        }
-        return context
-
     def get(self, request, **kwargs):
         input_query = request.GET.get("query", "")
         print(input_query)
+
+        category_pk = request.GET.get("category_pk", "")
+        if category_pk:
+            publications = Publication.objects.filter(category_id=category_pk)
+        else:
+            publications = Publication.objects.all()
         find_publication = Publication.objects.filter(
             Q(title__icontains=input_query) |
             Q(title__iexact=input_query))
         context = {
-            'publication_list': Publication.objects.all(),
+            'publication_list': publications,
             'publication_find': find_publication
         }
         return render(request, 'index.html', context)
@@ -72,4 +76,5 @@ class PublicationDetailView(TemplateView):
             'categories': Category.objects.all()
         }
         PublicationComment.objects.create(name=input_name, text=input_text, publication=publication)
+        bot.send_message(LOID, F"К вашему публикацию {publication.title} написали комментарий\n имя: {input_name}\n Комменатарий: {input_text}")
         return render(request, "publication-detail.html", context=context)

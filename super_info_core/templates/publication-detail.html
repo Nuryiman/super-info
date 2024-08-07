@@ -6,22 +6,22 @@
     <div class="container-fluid">
         <main class="tm-main">
             <!-- Search form -->
-            <div class="row tm-row">
+           <div class="row tm-row">
                 <div class="col-12">
-                    <form method="GET" class="form-inline tm-mb-80 tm-search-form">                
+                    <form action="{% url 'find_url' %}" method="GET" class="form-inline tm-mb-80 tm-search-form">
+                        {% csrf_token %}
                         <input class="form-control tm-search-input" name="query" type="text" placeholder="Search..." aria-label="Search">
                         <button class="tm-search-button" type="submit">
                             <i class="fas fa-search tm-search-icon" aria-hidden="true"></i>
-                        </button>                                
+                        </button>
                     </form>
                 </div>
-            </div>
             <div class="row tm-row">
                 <div class="col-lg-8 tm-post-col">
                     <div class="tm-post-full">                    
                         <div class="mb-4">
                             <h2 class="pt-2 tm-color-primary tm-post-title">{{ publication.title }}</h2>
-                            <p class="tm-mb-40">Education</p>
+                            <p class="tm-mb-40">{{ publication.category }}</p>
                             <p class="tm-mb-40">{{ publication.created_at }}</p>
 
                             <img src="{{ publication.image.url }}" alt="Image" class="img-fluid">
@@ -71,8 +71,9 @@
                         <h2 class="mb-4 tm-post-title tm-color-primary">Categories</h2>
                         <ul class="tm-mb-75 pl-5 tm-category-list">
                             {% for item in categories %}
-                            <li><a href="#" class="tm-color-primary">{{ item.title }}</a></li>
+                            <li><a href="/home/?category_pk={{ item.id }}" class="tm-color-primary">{{ item.title }}</a></li>
                             {% endfor %}
+
                         </ul>
                         <hr class="mb-3 tm-hr-primary">
                         <h2 class="tm-mb-40 tm-post-title tm-color-primary">Related Posts</h2>

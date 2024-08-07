@@ -26,6 +26,7 @@ urlpatterns = [
     path('contact/', ContactView.as_view(), name='contact_url'),
     path('publication_detail/<int:pk>/', PublicationDetailView.as_view(), name='publication_url'),
     path('publication_detail/<int:pk>/comment/', PublicationDetailView.as_view(), name='comment_url'),
+    path('home/?category_pk=', HomeView.as_view(), name='?category_pk='),
     path('home/find/', HomeView.as_view(), name='find_url')
 ]
 
