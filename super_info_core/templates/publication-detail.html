@@ -18,7 +18,7 @@
                 </div>
             <div class="row tm-row">
                 <div class="col-lg-8 tm-post-col">
-                    <div class="tm-post-full">                    
+                    <div class="tm-post-full">
                         <div class="mb-4">
                             <h2 class="pt-2 tm-color-primary tm-post-title">{{ publication.title }}</h2>
                             <p class="tm-mb-40">{{ publication.category }}</p>
@@ -29,7 +29,7 @@
                             <p>{{ publication.description|safe }}</p>
                             <span class="d-block text-right tm-color-primary">Hashtags: {% for hashtag_item in publication.hashtags.all %} #{{ hashtag_item.title }} {% endfor %}</span>
                         </div>
-                        
+
                         <!-- Comments -->
                         <div>
                             <h2 class="tm-color-primary tm-post-title">Comments</h2>
@@ -58,8 +58,8 @@
                                     <textarea class="form-control" name="message" rows="6" placeholder="Your comment text"></textarea>
                                 </div>
                                 <div class="text-right">
-                                    <button class="tm-btn tm-btn-primary tm-btn-small">Submit</button>                        
-                                </div>                                
+                                    <button class="tm-btn tm-btn-primary tm-btn-small">Submit</button>
+                                </div>
                             </form>
 
                         </div>
@@ -68,7 +68,7 @@
                 <aside class="col-lg-4 tm-aside-col">
                     <div class="tm-post-sidebar">
                         <hr class="mb-3 tm-hr-primary">
-                        <h2 class="mb-4 tm-post-title tm-color-primary">Categories</h2>
+                        <h2 class="mb-4 tm-post-title tm-color-primary">Категории</h2>
                         <ul class="tm-mb-75 pl-5 tm-category-list">
                             {% for item in categories %}
                             <li><a href="/home/?category_pk={{ item.id }}" class="tm-color-primary">{{ item.title }}</a></li>
@@ -76,7 +76,7 @@
 
                         </ul>
                         <hr class="mb-3 tm-hr-primary">
-                        <h2 class="tm-mb-40 tm-post-title tm-color-primary">Related Posts</h2>
+                        <h2 class="tm-mb-40 tm-post-title tm-color-primary">Похожие публикации</h2>
                         {% for item in publication.category.publications.all %}
                         <a href="{% url 'publication_url' item.id %}" class="d-block tm-mb-40">
                             <figure>
@@ -86,10 +86,11 @@
                         </a>
                         {% endfor %}
 
-                    </div>                    
+                    </div>
                 </aside>
             </div>
             {% include 'footer-part1.html' %}
+           </div>
         </main>
     </div>
     {% include 'footer-part2.html' %}

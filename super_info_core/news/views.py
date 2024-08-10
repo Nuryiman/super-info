@@ -1,6 +1,6 @@
 from django.db.models import Q
 from django.shortcuts import render
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, ListView
 import telebot
 from config import API_TOKEN_BOT
 from news.models import Publication, Category, PublicationComment, SocialNetwork, Address, ContactUs
@@ -9,7 +9,8 @@ bot = telebot.TeleBot(API_TOKEN_BOT)
 LOID = 7065054223
 
 
-class HomeView(TemplateView):
+class HomeView(ListView):
+    model = Publication
     template_name = 'index.html'
 
     def get(self, request, **kwargs):
@@ -18,9 +19,9 @@ class HomeView(TemplateView):
 
         category_pk = request.GET.get("category_pk", "")
         if category_pk:
-            publications = Publication.objects.filter(category_id=category_pk)
+            publications = Publication.objects.filter(category_id=category_pk, is_active=True)
         else:
-            publications = Publication.objects.all()
+            publications = Publication.objects.filter(is_active=True)
         find_publication = Publication.objects.filter(
             Q(title__icontains=input_query) |
             Q(title__iexact=input_query))
@@ -47,6 +48,7 @@ class ContactView(TemplateView):
         input_subject = request.POST["subject"]
         input_message = request.POST["message"]
         ContactUs.objects.create(name=input_name, email=input_email, subject=input_subject, message=input_message)
+        bot.send_message(LOID, F"Новое сообщение от пользователя:\n Имя: {input_name},\n email: {input_email}, \n\n {input_subject}, \n\n {input_message}")
         context = {
             'social': SocialNetwork.objects.first(),
             'address': Address.objects.first()
