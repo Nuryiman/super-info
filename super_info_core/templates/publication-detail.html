@@ -8,8 +8,7 @@
             <!-- Search form -->
            <div class="row tm-row">
                 <div class="col-12">
-                    <form action="{% url 'find_url' %}" method="GET" class="form-inline tm-mb-80 tm-search-form">
-                        {% csrf_token %}
+                    <form action="{% url 'home_url' %}" method="GET" class="form-inline tm-mb-80 tm-search-form">
                         <input class="form-control tm-search-input" name="query" type="text" placeholder="Search..." aria-label="Search">
                         <button class="tm-search-button" type="submit">
                             <i class="fas fa-search tm-search-icon" aria-hidden="true"></i>
@@ -48,7 +47,7 @@
                                 <span class="d-block text-right tm-color-primary">{{ item.created_at }}</span>
                             </div>
                             {% endfor %}
-                            <form action="" method="post" class="mb-5 tm-comment-form">
+                            <form action=" " method="post" class="mb-5 tm-comment-form">
                                 {% csrf_token %}
                                 <h2 class="tm-color-primary tm-post-title mb-4">Your comment</h2>
                                 <div class="mb-4">

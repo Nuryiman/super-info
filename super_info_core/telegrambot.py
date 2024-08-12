@@ -3,12 +3,9 @@ import django
 from django.conf import settings
 from django.core.files import File
 import datetime
-from news.models import Publication, Category, Hashtag
-import telebot
+from telebot import TeleBot
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from config import API_TOKEN_BOT
-from news.views import LOID
-
 
 # Установите переменную окружения DJANGO_SETTINGS_MODULE на ваш файл с настройками
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'super_info_core.settings')
@@ -16,9 +13,11 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'super_info_core.settings')
 # Инициализируйте Django
 django.setup()
 
+from news.models import Publication, Category, Hashtag
+from news.views import LOID
 
 SAVE_PATH = os.path.join(settings.MEDIA_ROOT, 'telegram_img/')
-bot = telebot.TeleBot(API_TOKEN_BOT)
+bot = TeleBot(API_TOKEN_BOT)
 title = None
 short_description = None
 description = None
@@ -66,16 +65,14 @@ def blog_category(message):
         msg = bot.send_message(message.chat.id, "Отлично, теперь напишите короткое описание")
         bot.register_next_step_handler(msg, blog_short_description)
     except Exception:
-        msg = bot.send_message(message.chat.id, "Приозошла ошибка попробуйте заново")
+        msg = bot.send_message(message.chat.id, "Произошла ошибка, попробуйте заново")
         bot.register_next_step_handler(msg, blog_category)
-
 
 def blog_short_description(message):
     global short_description
     short_description = message.text
     msg = bot.send_message(message.chat.id, "Отлично, теперь напишите полное описание")
     bot.register_next_step_handler(msg, blog_description)
-
 
 def blog_description(message):
     global description
@@ -91,7 +88,7 @@ def blog_hashtag(message):
     try:
         hashtag_ids = message.text.split(",")
     except Exception:
-        msg = bot.send_message(message.chat.id, "Приозошла ошибка попробуйте заново")
+        msg = bot.send_message(message.chat.id, "Произошла ошибка, попробуйте заново")
         bot.register_next_step_handler(msg, blog_hashtag)
     hashtags = []
     hashtag_list = []
@@ -158,6 +155,5 @@ def send_blog(callback):
     elif callback.data == "net":
         msg = bot.send_message(callback.message.chat.id, "Хорошо, заново выберите хэштеги")
         bot.register_next_step_handler(msg, blog_hashtag)
-
 
 bot.infinity_polling()

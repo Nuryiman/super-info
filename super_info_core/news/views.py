@@ -24,11 +24,10 @@ class HomeView(ListView):
             publications = Publication.objects.filter(is_active=True)
         find_publication = Publication.objects.filter(
             Q(title__icontains=input_query) |
-            Q(title__iexact=input_query))
+            Q(description__icontains=input_query))
         context = {
             'publication_list': publications,
             'publication_find': find_publication,
-            'query_text': input_query
         }
         return render(request, 'index.html', context)
 
