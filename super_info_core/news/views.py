@@ -27,7 +27,8 @@ class HomeView(ListView):
             Q(title__iexact=input_query))
         context = {
             'publication_list': publications,
-            'publication_find': find_publication
+            'publication_find': find_publication,
+            'query_text': input_query
         }
         return render(request, 'index.html', context)
 
