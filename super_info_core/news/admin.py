@@ -5,7 +5,7 @@ from news.models import Publication, PublicationComment, Hashtag, Category, Soci
 
 @admin.register(Publication)
 class PublicationAdmin(admin.ModelAdmin):
-    list_display = ['title']
+    list_display = ['title', 'is_active']
 
 
 @admin.register(Category)
@@ -20,7 +20,7 @@ class HashtagAdmin(admin.ModelAdmin):
 
 @admin.register(PublicationComment)
 class PublicationCommentAdmin(admin.ModelAdmin):
-    list_display = ['publication']
+    list_display = ['publication', 'name', 'text']
 
     def has_add_permission(self, request,  obj=None):
         return False

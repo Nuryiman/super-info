@@ -12,24 +12,25 @@ LOID = 7065054223
 class HomeView(ListView):
     model = Publication
     template_name = 'index.html'
+    context_object_name = 'publication_list'
+    paginate_by = 4
 
-    def get(self, request, **kwargs):
-        input_query = request.GET.get("query", "")
-        print(input_query)
+    def get_queryset(self):
+        input_query = self.request.GET.get("query", "")
+        category_pk = self.request.GET.get("category_pk", "")
 
-        category_pk = request.GET.get("category_pk", "")
+        queryset = Publication.objects.filter(is_active=True, )
         if category_pk:
-            publications = Publication.objects.filter(category_id=category_pk, is_active=True)
-        else:
-            publications = Publication.objects.filter(is_active=True)
-        find_publication = Publication.objects.filter(
-            Q(title__icontains=input_query) |
-            Q(description__icontains=input_query))
-        context = {
-            'publication_list': publications,
-            'publication_find': find_publication,
-        }
-        return render(request, 'index.html', context)
+            queryset = queryset.filter(category_id=category_pk)
+
+        if input_query:
+            queryset = queryset.filter(
+                Q(title__icontains=input_query) |
+                Q(description__icontains=input_query) |
+                Q(short_description__icontains=input_query)
+            )
+
+        return queryset
 
 
 class ContactView(TemplateView):
