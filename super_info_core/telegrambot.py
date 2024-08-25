@@ -6,6 +6,9 @@ import datetime
 from telebot import TeleBot
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from config import API_TOKEN_BOT
+from news.models import Publication, Category, Hashtag
+from news.views import LOID
+
 
 # Установите переменную окружения DJANGO_SETTINGS_MODULE на ваш файл с настройками
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'super_info_core.settings')
@@ -13,8 +16,6 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'super_info_core.settings')
 # Инициализируйте Django
 django.setup()
 
-from news.models import Publication, Category, Hashtag
-from news.views import LOID
 
 SAVE_PATH = os.path.join(settings.MEDIA_ROOT, 'telegram_img/')
 bot = TeleBot(API_TOKEN_BOT)
@@ -40,6 +41,18 @@ def category(message):
     category_title = message.text
     Category.objects.create(title=category_title)
     bot.send_message(message.chat.id, "Новая категория создана.")
+
+
+@bot.message_handler(commands=['create_hashtag'])
+def create_category(message):
+    new_hashtag = bot.send_message(message.chat.id, "Напишите название хэштега:")
+    bot.register_next_step_handler(new_hashtag, hashtag)
+
+
+def hashtag(message):
+    hashtag_title = message.text
+    Hashtag.objects.create(title=hashtag_title)
+    bot.send_message(message.chat.id, "Новый хэштег создан.")
 
 
 @bot.message_handler(commands=['new'])
@@ -68,11 +81,13 @@ def blog_category(message):
         msg = bot.send_message(message.chat.id, "Произошла ошибка, попробуйте заново")
         bot.register_next_step_handler(msg, blog_category)
 
+
 def blog_short_description(message):
     global short_description
     short_description = message.text
     msg = bot.send_message(message.chat.id, "Отлично, теперь напишите полное описание")
     bot.register_next_step_handler(msg, blog_description)
+
 
 def blog_description(message):
     global description

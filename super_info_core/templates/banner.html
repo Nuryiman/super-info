@@ -1,4 +1,5 @@
 {% load static %}
+{% load i18n %}
 <header class="tm-header" id="tm-header">
         <div class="tm-header-wrapper">
             <button class="navbar-toggler" type="button" aria-label="Toggle navigation">
@@ -13,13 +14,13 @@
     <li class="tm-nav-item {% if request.path == '/home/' %}active{% endif %}">
         <a href="{% url 'home_url' %}" class="tm-nav-link">
             <i class="fas fa-home"></i>
-            Blog Home
+            {% trans 'Главная' %}
         </a>
     </li>
     <li class="tm-nav-item {% if request.path == '/contact/' %}active{% endif %}">
         <a href="{% url 'contact_url' %}" class="tm-nav-link">
             <i class="far fa-comments"></i>
-            Contact Us
+           {% trans 'Обратная связь' %}
         </a>
     </li>
 </ul>

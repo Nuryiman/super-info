@@ -1,6 +1,7 @@
+from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import render
-from django.views.generic import TemplateView, ListView
+from django.views.generic import TemplateView
 import telebot
 from config import API_TOKEN_BOT
 from news.models import Publication, Category, PublicationComment, SocialNetwork, Address, ContactUs
@@ -9,28 +10,33 @@ bot = telebot.TeleBot(API_TOKEN_BOT)
 LOID = 7065054223
 
 
-class HomeView(ListView):
+class HomeView(TemplateView):
     model = Publication
     template_name = 'index.html'
-    context_object_name = 'publication_list'
-    paginate_by = 4
 
-    def get_queryset(self):
+    def get_context_data(self):
+        publications = Publication.objects.filter(is_active=True)
         input_query = self.request.GET.get("query", "")
         category_pk = self.request.GET.get("category_pk", "")
-
-        queryset = Publication.objects.filter(is_active=True, )
         if category_pk:
-            queryset = queryset.filter(category_id=category_pk)
+            publications = publications.filter(category_id=category_pk)
 
         if input_query:
-            queryset = queryset.filter(
+            publications = publications.filter(
                 Q(title__icontains=input_query) |
                 Q(description__icontains=input_query) |
                 Q(short_description__icontains=input_query)
             )
+        paginator = Paginator(publications, 2)
+        page_number = self.request.GET.get("page", 1)
+        page_obj = paginator.get_page(page_number)
 
-        return queryset
+        context = {
+            "input_query": input_query,
+            "page_obj": page_obj,
+            "paginator": paginator,
+        }
+        return context
 
 
 class ContactView(TemplateView):
@@ -79,5 +85,6 @@ class PublicationDetailView(TemplateView):
             'categories': Category.objects.all()
         }
         PublicationComment.objects.create(name=input_name, text=input_text, publication=publication)
-        bot.send_message(LOID, F"К вашему публикацию {publication.title} написали комментарий\n имя: {input_name}\n Комменатарий: {input_text}")
+        bot.send_message(LOID, F"К вашему публикацию {publication.title} написали комментарий\n имя: {input_name}\n Комментарий: {input_text}")
+
         return render(request, "publication-detail.html", context=context)

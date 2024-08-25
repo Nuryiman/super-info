@@ -23,6 +23,7 @@ class Hashtag(models.Model):
         verbose_name = 'Хэштег'
         verbose_name_plural = 'Хэштеги'
 
+
 class Publication(models.Model):
     is_new = models.BooleanField(default=True, verbose_name='Новое')
     category = models.ForeignKey(
