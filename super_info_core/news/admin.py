@@ -1,15 +1,16 @@
 from django.contrib import admin
+from modeltranslation.admin import TranslationAdmin
 
 from news.models import Publication, PublicationComment, Hashtag, Category, SocialNetwork, Address, ContactUs
 
 
 @admin.register(Publication)
-class PublicationAdmin(admin.ModelAdmin):
+class PublicationAdmin(TranslationAdmin):
     list_display = ['title', 'is_active']
 
 
 @admin.register(Category)
-class CategoryAdmin(admin.ModelAdmin):
+class CategoryAdmin(TranslationAdmin):
     list_display = ['title']
 
 
